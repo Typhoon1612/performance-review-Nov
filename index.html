@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Performance Review — 6 Months</title>
+<style>
+:root{
+  --bg:#0b1220;--panel:#111c30;--panel2:#172640;--ink:#f4f7fc;
+  --muted:#aab7cb;--line:#2b3a53;--blue:#80aaff;--cyan:#7de0dc;
+  --green:#8ce0b5;--amber:#ffd28a;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+.topbar{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;border-bottom:1px solid var(--line);background:#0d1728}
+.brand{display:flex;align-items:center;gap:11px;font-size:13px;font-weight:750;letter-spacing:.02em}
+.brand-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:grid;place-items:center;color:#102039;font-weight:900}
+.top-actions{display:flex;gap:9px}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);border-radius:9px;padding:9px 13px;color:var(--ink);background:#17243a;font-weight:650;font-size:12px}
+button:hover{border-color:#7298d8;background:#1d304d}
+button:disabled{opacity:.35;cursor:not-allowed}
+main{height:calc(100% - 122px);display:grid;place-items:center;padding:26px}
+.deck{width:min(1100px,100%);height:min(680px,100%);position:relative}
+.slide{position:absolute;inset:0;display:none;overflow:auto;padding:clamp(28px,5vw,66px);border:1px solid #2a3c58;border-radius:22px;background:
+ radial-gradient(circle at 88% 8%,#24416b55,transparent 32%),
+ linear-gradient(135deg,#14223a,#101a2c 70%);box-shadow:0 24px 80px #0005}
+.slide.active{display:flex;flex-direction:column;animation:appear .24s ease}
+@keyframes appear{from{opacity:.4;transform:translateY(7px)}to{opacity:1;transform:none}}
+.kicker{color:var(--cyan);font-size:11px;text-transform:uppercase;letter-spacing:.17em;font-weight:800;margin-bottom:18px}
+h1{font-size:clamp(40px,6vw,70px);line-height:1.02;letter-spacing:-.055em;margin:0 0 22px;max-width:850px}
+h2{font-size:clamp(27px,4vw,42px);letter-spacing:-.04em;line-height:1.1;margin:0 0 26px}
+h3{font-size:17px;margin:0 0 10px}
+.lead{font-size:clamp(17px,2vw,22px);line-height:1.55;color:#d0dced;max-width:790px}
+.sub{font-size:14px;color:var(--muted);max-width:760px;line-height:1.65}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #46618a;border-radius:999px;padding:7px 12px;color:#dce8ff;font-size:12px;font-weight:700;width:max-content;background:#1a2c49}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:6px}
+.card{background:#182943cc;border:1px solid #30435f;border-radius:15px;padding:19px 20px}
+.card p{color:#c2cfe1;margin:0;line-height:1.55;font-size:14px}
+.card h3{color:#fff}
+ul{margin:0;padding-left:20px;color:#cfdaea;line-height:1.8;font-size:15px}
+li{padding:2px 0}
+.feature-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:8px}
+.feature{display:flex;gap:11px;align-items:flex-start;padding:14px 15px;border:1px solid #30435f;background:#182943cc;border-radius:12px;color:#e5edf8;font-size:14px}
+.dot{width:8px;height:8px;background:var(--cyan);border-radius:50%;margin-top:7px;flex:none}
+.big-stat{font-size:clamp(40px,7vw,76px);font-weight:850;letter-spacing:-.06em;line-height:1;color:var(--blue)}
+.stat-label{font-size:13px;color:var(--muted);margin-top:9px}
+.app-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.app{border-radius:14px;border:1px solid #3b5476;background:#1a2d49;padding:18px}
+.app strong{display:block;font-size:18px;margin-bottom:5px}
+.app span{color:var(--muted);font-size:13px}
+.note{border-left:3px solid var(--cyan);padding:12px 16px;background:#172b43;border-radius:0 10px 10px 0;color:#d3dfef;line-height:1.55;font-size:14px;margin-top:18px}
+.footer{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+.controls{display:flex;align-items:center;gap:10px}
+.progress{height:4px;background:#24344d;position:absolute;left:0;right:0;bottom:0}
+.progress span{height:100%;display:block;background:linear-gradient(90deg,var(--blue),var(--cyan));width:0;transition:width .2s}
+.counter{font-variant-numeric:tabular-nums;min-width:48px;text-align:center}
+.slide-no{position:absolute;right:28px;top:25px;color:#6f829e;font-size:11px;letter-spacing:.12em}
+.endline{margin-top:auto;padding-top:26px;color:#7f91ac;font-size:12px}
+@media(max-width:700px){
+ .topbar{padding:0 14px;height:58px}.brand{font-size:11px}.top-actions button{padding:8px;font-size:11px}
+ main{height:calc(100% - 108px);padding:12px}
+ .deck{height:100%}.slide{padding:28px 22px;border-radius:15px}
+ .grid,.feature-list,.app-row{grid-template-columns:1fr}
+ .footer{height:50px;padding:0 14px}
+ ul{font-size:14px}
+}
+@media print{
+ @page{size:landscape;margin:0}
+ html,body{height:auto;overflow:visible;background:#fff}
+ .topbar,.footer,.progress{display:none!important}
+ main{height:auto;display:block;padding:0}
+ .deck{width:auto;height:auto}
+ .slide,.slide.active{display:flex!important;position:relative;inset:auto;width:100vw;height:100vh;border:0;border-radius:0;box-shadow:none;page-break-after:always;break-after:page;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">P</span><span>PERFORMANCE REVIEW <span style="color:#7185a4">/ 6 MONTHS</span></span></div>
+  <div class="top-actions">
+    <button onclick="window.print()">Print / Save PDF</button>
+  </div>
+</header>
+<main>
+<div class="deck" id="deck">
+  <section class="slide active">
+    <span class="slide-no">01 / 09</span>
+    <div class="kicker">Employee performance review · Last 6 months</div>
+    <h1>Performance<br><span style="color:var(--blue)">Review</span></h1>
+    <p class="lead">A summary of contributions across IT system development, mobile application delivery, infrastructure support and AI-assisted creative production.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:28px">
+      <span class="pill">IT Development</span><span class="pill">Mobile Applications</span><span class="pill">AIGC & Creative</span>
+    </div>
+    <div class="endline">Use the arrow keys or navigation controls to move through the presentation.</div>
+  </section>
+
+  <section class="slide">
+    <span class="slide-no">02 / 09</span>
+    <div class="kicker">01 · Core responsibility</div>
+    <h2>HRM System Development<br>& Maintenance</h2>
+    <p class="sub">Handle the company's HRM system across its development and operational lifecycle.</p>
+    <div class="grid">
+      <div class="card"><h3>Development</h3><ul><li>Understand requirements</li><li>Plan technical solutions</li><li>Frontend and backend development</li><li>Database design</li></ul></div>
+      <div class="card"><h3>Operations</h3><ul><li>Testing and debugging</li><li>Deployment</li><li>System maintenance</li><li>User support and troubleshooting</li></ul></div>
+    </div>
+    <div class="note">For complex features, I develop a prototype in a separate branch, present it for management review and obtain approval before integrating it into production. For straightforward fixes, I can implement and test them directly.</div>
+  </section>
+
+  <section class="slide">
+    <span class="slide-no">03 / 09</span>
+    <div class="kicker">02 · Website improvements</div>
+    <h2>HRM Website<br>Enhancements</h2>
+    <p class="sub">Enhanced the existing HRM website with improvements to key employee and HR workflows.</p>
+    <div class="feature-list">
+      <div class="feature"><span class="dot"></span><span><strong>Attendance Management</strong><br>Improved attendance-related functionality.</span></div>
+      <div class="feature"><span class="dot"></span><span><strong>Leave Management</strong><br>Improved leave application functionality.</span></div>
+      <div class="feature"><span class="dot"></span><span><strong>Approval Workflow</strong><br>Enhanced leave approval processes.</span></div>
+      <div class="feature"><span class="dot"></span><span><strong>Notifications</strong><br>Improved system communication.</span></div>
+      <div class="feature"><span class="dot"></span><span><strong>UI/UX Improvements</strong><br>Improved usability and user experience.</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <span class="slide-no">04 / 09</span>
+    <div class="kicker">03 · Major delivery</div>
+    <h2>HRM Mobile Application</h2>
+    <p class="sub">Independently developed and delivered the company's HRM mobile applications, including backend development.</p>
+    <div class="app-row">
+      <div class="app"><strong>Android</strong><span>Released on Google Play Store</span></div>
+      <div class="app"><strong>iOS</strong><span>Released on Apple App Store</span></div>
+    </div>
+    <div class="grid" style="margin-top:15px">
+      <div class="card"><div class="big-stat">End-to-end</div><div class="stat-label">Independent mobile and backend development</div></div>
+      <div class="card"><div class="big-stat">All staff</div><div class="stat-label">Application made available to company employees</div></div>
+    </div>
+    <div class="note">Continue maintaining and improving the applications, including features such as leave management and messaging.</div>
+  </section>
+
+  <section class="slide">
+    <span class="slide-no">05 / 09</span>
+    <div class="kicker">04 · Additional IT support</div>
+    <h2>Infrastructure &<br>Technical Support</h2>
+    <div class="grid">
+      <div class="card">
+        <h3 style="color:var(--cyan)">Cloudflare Zero Trust</h3>
+        <p>Assisted with the setup of Cloudflare Zero Trust for the company's IT environment.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--cyan)">Laptop Preparation</h3>
+        <p>Assisted the chairman with resetting and preparing laptops for Korean staff.</p>
+      </div>
+    </div>
+    <div class="endline">Additional support beyond the core HRM system responsibilities.</div>
+  </section>
+
+  <section class="slide">
+    <span class="slide-no">06 / 09</span>
+    <div class="kicker">05 · Creative production</div>
+    <h2>AI & Creative<br>Production</h2>
+    <p class="sub">Recently started exploring AI-assisted animation and video production.</p>
+    <div class="grid">
+      <div class="card">
+        <div class="project-top"><h3>Halloween Mascot Animation</h3></div>
+        <p>Produced a short Halloween-themed animated story featuring the company's mascot. The video was completed and published.</p>
+      </div>
+      <div class="card">
+        <div class="project-top"><h3>Slot Machine Motion Graphics</h3></div>
+        <p>Developed a motion graphics advertisement concept. The proposed creative direction was not approved.</p>
+      </div>
+    </div>
+    <div class="note">Tasks explored: AI video generation, storyboarding, video editing, motion graphics, character animation and creative planning.</div>
+    <p class="sub" style="margin-top:16px">Tools: Seedance API · Nano Banana · CapCut</p>
+  </section>
+
+  <section class="slide">
+    <span class="slide-no">07 / 09</span>
+    <div class="kicker">06 · Capability overview</div>
+    <h2>Skills & Capabilities</h2>
+    <div class="grid">
+      <div class="card"><h3>Web Development</h3><p>Frontend · Backend · Database</p></div>
+      <div class="card"><h3>Mobile Development</h3><p>Android · iOS</p></div>
+      <div class="card"><h3>System Management</h3><p>Maintenance · Deployment · Troubleshooting</p></div>
+      <div class="card"><h3>Infrastructure</h3><p>Cloudflare Zero Trust</p></div>
+      <div class="card"><h3>AI Development</h3><p>AI-assisted coding and tool development</p></div>
+      <div class="card"><h3>Creative Production</h3><p>AIGC · Animation · Motion Graphics · Video Editing</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <span class="slide-no">08 / 09</span>
+    <div class="kicker">07 · Additional interests</div>
+    <h2>Exploring AIGC &<br>Creative Production</h2>
+    <p class="lead">Besides my core IT responsibilities, I am interested in exploring AIGC and expanding my creative production skills.</p>
+    <div class="grid" style="margin-top:24px">
+      <div class="card"><h3>Seasonal Mascot Videos</h3><p>Contribute to mascot videos for Christmas, Chinese New Year and other seasonal campaigns.</p></div>
+      <div class="card"><h3>Light Motion Graphics</h3><p>Help create simple motion graphics advertisements, such as slot machine promotional videos.</p></div>
+    </div>
+    <div class="note">My main focus will remain on IT development and HRM system maintenance, while contributing to creative projects when opportunities arise.</div>
+  </section>
+
+  <section class="slide">
+    <span class="slide-no">09 / 09</span>
+    <div class="kicker">Thank you</div>
+    <h1>Thank You.</h1>
+    <p class="lead">I appreciate the opportunities and trust given to me throughout this period.</p>
+    <p class="lead" style="font-size:17px;margin-top:10px">I look forward to discussing my performance and contributions.</p>
+    <div class="endline">Performance Review · Last 6 Months</div>
+  </section>
+  <div class="progress"><span id="bar"></span></div>
+</div>
+</main>
+<footer class="footer">
+  <span>Performance Review · Last 6 Months</span>
+  <div class="controls">
+    <button id="prev" onclick="move(-1)">← Previous</button>
+    <span class="counter" id="counter">01 / 09</span>
+    <button id="next" onclick="move(1)">Next →</button>
+  </div>
+</footer>
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let current=0;
+function show(i){
+ current=Math.max(0,Math.min(slides.length-1,i));
+ slides.forEach((s,n)=>s.classList.toggle('active',n===current));
+ document.getElementById('counter').textContent=String(current+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+ document.getElementById('bar').style.width=((current+1)/slides.length*100)+'%';
+ document.getElementById('prev').disabled=current===0;
+ document.getElementById('next').disabled=current===slides.length-1;
+}
+function move(d){show(current+d)}
+document.addEventListener('keydown',e=>{
+ if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();move(1)}
+ if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();move(-1)}
+ if(e.key==='Home')show(0);
+ if(e.key==='End')show(slides.length-1);
+});
+show(0);
+</script>
+</body>
+</html>
